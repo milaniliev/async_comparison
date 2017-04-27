@@ -23,14 +23,12 @@ database.connect((error, connection) => {
 
 // Promises
 database.connect.then((connection) => {
-  user_promise = connection.query('user')
-  orders_promise = connection.query('orders')
-  Promise.all([user_promise, orders_promise]).then((user, orders){
+  Promise.all([connection.query('user'), connection.query('orders')]).then((user, orders){
     done(user, orders)
   })
 })
 
 // Async Functions
 let connection = await database.connect()
-let user, orders = await [connection.query('user'), connection.query('orders')]
+let user, orders = await Promise.all([connection.query('user'), connection.query('orders')])
 done(user, orders)
